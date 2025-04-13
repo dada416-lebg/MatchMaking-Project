@@ -11,7 +11,7 @@ function App() {
   const [isInQueue, setIsInQueue] = useState(false);
   const [matchState, setMatchState] = useState(null);
   const [scores, setScores] = useState({ player1Score: 0, player2Score: 0 });
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(30);
   const [gameStatus, setGameStatus] = useState('waiting'); // waiting, playing, finished
   const [connectionStatus, setConnectionStatus] = useState('connecting');
   const [errorMessage, setErrorMessage] = useState('');
@@ -79,7 +79,7 @@ function App() {
     socket.on('matchStart', (data) => {
       setMatchState(data);
       setGameStatus('playing');
-      setTimeLeft(60);
+      setTimeLeft(30);
       setScores({ player1Score: 0, player2Score: 0 });
     });
 
@@ -201,35 +201,34 @@ function App() {
     }
 
     if (gameStatus === 'finished') {
+      const isPlayer1 = matchState.player1.pseudo === pseudo;
+      const playerScore = isPlayer1 ? scores.player1Score : scores.player2Score;
+      const opponentScore = isPlayer1 ? scores.player2Score : scores.player1Score;
+      const result = playerScore > opponentScore ? 'Victoire ! 🎉' : 'Défaite... 😢';
+      const difference = Math.abs(playerScore - opponentScore);
+      
       return (
-        <div className="game-over">
-          <h2>Partie terminée !</h2>
-          <div className="final-scores">
-            <p>{matchState.player1.pseudo}: {scores.player1Score}</p>
-            <p>{matchState.player2.pseudo}: {scores.player2Score}</p>
-          </div>
-          <div className="game-over-buttons">
+        <div className="game-screen">
+          <div className="game-result">
+            <h2 className={playerScore > opponentScore ? 'victory' : 'defeat'}>{result}</h2>
+            <div className="final-scores">
+              <p>Votre score: {playerScore}</p>
+              <p>Score adverse: {opponentScore}</p>
+              <p className="score-difference">
+                {playerScore > opponentScore 
+                  ? `Vous avez gagné avec ${difference} clic${difference > 1 ? 's' : ''} d'avance !`
+                  : `Vous avez perdu avec ${difference} clic${difference > 1 ? 's' : ''} de retard...`}
+              </p>
+            </div>
             <button 
+              className="play-again-button"
               onClick={() => {
                 setGameStatus('waiting');
                 setIsInQueue(false);
-                setMatchState(null);
                 setPseudo('');
               }}
-              className="quit-button"
             >
-              Quitter l'application
-            </button>
-            <button 
-              onClick={() => {
-                setGameStatus('waiting');
-                setIsInQueue(false);
-                setMatchState(null);
-                handleJoinQueue({ preventDefault: () => {} });
-              }}
-              className="rematch-button"
-            >
-              Nouvelle partie
+              Rejouer
             </button>
           </div>
         </div>
