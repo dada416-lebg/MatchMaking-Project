@@ -11,8 +11,13 @@ function createWindow() {
     }
   });
 
-  // Charge le client React localement
-  mainWindow.loadFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  // En production, utiliser l'URL Heroku
+  if (process.env.NODE_ENV === 'production') {
+    mainWindow.loadURL('https://matchmaking-game-822cfdf6085c.herokuapp.com/');
+  } else {
+    // En développement, utiliser le client local
+    mainWindow.loadFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  }
 
   // Ouvre les outils de développement (optionnel)
   // mainWindow.webContents.openDevTools();
