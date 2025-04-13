@@ -7,8 +7,6 @@ const SERVER_URL = process.env.NODE_ENV === 'production'
   ? 'https://votre-app-heroku.herokuapp.com'
   : 'http://localhost:5001';
 
-const socket = io(SERVER_URL);
-
 function App() {
   const [pseudo, setPseudo] = useState('');
   const [isInQueue, setIsInQueue] = useState(false);
@@ -16,9 +14,51 @@ function App() {
   const [scores, setScores] = useState({ player1Score: 0, player2Score: 0 });
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameStatus, setGameStatus] = useState('waiting'); // waiting, playing, finished
+  const [connectionStatus, setConnectionStatus] = useState('connecting');
+  const [socket, setSocket] = useState(null);
   const timerRef = useRef(null);
 
+  // Fonction pour établir la connexion
+  const connectToServer = () => {
+    setConnectionStatus('connecting');
+    const newSocket = io(SERVER_URL, {
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 10000
+    });
+
+    newSocket.on('connect', () => {
+      setConnectionStatus('connected');
+      console.log('Connecté au serveur');
+    });
+
+    newSocket.on('connect_error', (error) => {
+      setConnectionStatus('error');
+      console.error('Erreur de connexion:', error);
+    });
+
+    newSocket.on('disconnect', () => {
+      setConnectionStatus('disconnected');
+      console.log('Déconnecté du serveur');
+    });
+
+    setSocket(newSocket);
+  };
+
+  // Connexion initiale
   useEffect(() => {
+    connectToServer();
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, []);
+
+  // Gestion des événements Socket.IO
+  useEffect(() => {
+    if (!socket) return;
+
     socket.on('matchStart', (data) => {
       setMatchState(data);
       setGameStatus('playing');
@@ -47,7 +87,7 @@ function App() {
       socket.off('matchEnd');
       socket.off('playerDisconnected');
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (gameStatus === 'playing') {
@@ -182,7 +222,22 @@ function App() {
 
   return (
     <div className="App">
-      {renderGame()}
+      {connectionStatus === 'error' && (
+        <div className="connection-error">
+          <p>Impossible de se connecter au serveur</p>
+          <button onClick={connectToServer}>Réessayer</button>
+        </div>
+      )}
+
+      {connectionStatus === 'connecting' && (
+        <div className="connection-status">
+          <p>Connexion au serveur en cours...</p>
+        </div>
+      )}
+
+      {connectionStatus === 'connected' && (
+        renderGame()
+      )}
     </div>
   );
 }
