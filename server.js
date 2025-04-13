@@ -36,13 +36,8 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 
-// Servir les fichiers statiques du client en production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
-}
+// Servir les fichiers statiques du client React
+app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 // Connexion à MongoDB Atlas
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://<username>:<password>@cluster0.mongodb.net/click-battle?retryWrites=true&w=majority';
@@ -287,6 +282,11 @@ async function handlePlayerDisconnect(playerId) {
     }
   }
 }
+
+// Route pour toutes les autres requêtes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
 
 const PORT = process.env.PORT || 5001;
 const HOST = '0.0.0.0';
