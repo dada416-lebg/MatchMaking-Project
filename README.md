@@ -14,35 +14,35 @@ Click Battle est un jeu en ligne où deux joueurs s'affrontent dans une compéti
 - 💻 Application de bureau disponible
 - 🌐 Version web accessible
 
-## 🏗️ Structure du Projet
+## 🚀 Comment Jouer
 
-```
-click-battle/
-├── client/                 # Application React
-│   ├── public/            # Fichiers statiques
-│   └── src/               # Code source React
-│       ├── components/    # Composants React
-│       ├── App.js         # Composant principal
-│       └── App.css        # Styles CSS
-├── server/                # Backend Node.js
-│   ├── models/           # Modèles MongoDB
-│   ├── routes/           # Routes API
-│   └── server.js         # Serveur principal
-├── electron/             # Configuration Electron
-├── package.json          # Dépendances et scripts
-└── README.md            # Documentation
-```
+### Méthode Simple (Recommandée) 🎮
 
-## 🚀 Installation
+1. **Téléchargez l'application**
+   - Rendez-vous sur la section "Releases" du projet
+   - Téléchargez `Click Battle Setup 1.0.0.exe`
 
-### Prérequis
+2. **Installez l'application**
+   - Exécutez le fichier d'installation
+   - Suivez les instructions à l'écran
+   - L'application sera installée dans votre menu Démarrer
 
+3. **Lancez et jouez !**
+   - Ouvrez l'application depuis le menu Démarrer
+   - Cliquez sur "Rejoindre la file d'attente"
+   - Attendez qu'un adversaire soit trouvé
+   - Cliquez le plus rapidement possible pour gagner !
+
+### Méthode Développeur (Pour les contributeurs) 💻
+
+Cette méthode est uniquement nécessaire si vous souhaitez contribuer au développement du jeu.
+
+#### Prérequis
 - Node.js (v14 ou supérieur)
 - npm (v6 ou supérieur)
 - MongoDB Atlas (pour la base de données)
 
-### Installation Locale
-
+#### Installation
 1. **Clonez le dépôt**
 ```bash
 git clone https://github.com/votre-username/click-battle.git
@@ -72,28 +72,24 @@ PORT=5001
 npm run dev:full
 ```
 
-### Installation de l'Application de Bureau
+## 🏗️ Structure du Projet
 
-1. **Téléchargement**
-   - Rendez-vous sur la section "Releases" du projet
-   - Téléchargez `Click Battle Setup 1.0.0.exe`
-
-2. **Installation**
-   - Exécutez le fichier d'installation
-   - Suivez les instructions à l'écran
-   - L'application sera installée dans votre menu Démarrer
-
-3. **Premier lancement**
-   - Ouvrez l'application depuis le menu Démarrer
-   - L'application se connectera automatiquement au serveur
-
-## 🎮 Comment Jouer
-
-1. Lancez l'application (bureau ou web)
-2. Cliquez sur "Rejoindre la file d'attente"
-3. Attendez qu'un adversaire soit trouvé
-4. Une fois le match commencé, cliquez le plus rapidement possible
-5. Le premier à atteindre 100 points remporte la partie
+```
+click-battle/
+├── client/                 # Application React
+│   ├── public/            # Fichiers statiques
+│   └── src/               # Code source React
+│       ├── components/    # Composants React
+│       ├── App.js         # Composant principal
+│       └── App.css        # Styles CSS
+├── server/                # Backend Node.js
+│   ├── models/           # Modèles MongoDB
+│   ├── routes/           # Routes API
+│   └── server.js         # Serveur principal
+├── electron/             # Configuration Electron
+├── package.json          # Dépendances et scripts
+└── README.md            # Documentation
+```
 
 ## 🔧 Technologies Utilisées
 
