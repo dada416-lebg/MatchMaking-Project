@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
-// Récupérer l'adresse IP du serveur depuis l'URL ou utiliser l'URL Heroku par défaut
-const SERVER_URL = process.env.NODE_ENV === 'production'
-  ? 'https://votre-app-heroku.herokuapp.com'
-  : 'http://localhost:5001';
+// URL du serveur Heroku
+const SERVER_URL = 'https://matchmaking-game-822cfdf6085c.herokuapp.com';
+console.log('Tentative de connexion à:', SERVER_URL);
 
 function App() {
   const [pseudo, setPseudo] = useState('');
@@ -15,31 +14,49 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameStatus, setGameStatus] = useState('waiting'); // waiting, playing, finished
   const [connectionStatus, setConnectionStatus] = useState('connecting');
+  const [errorMessage, setErrorMessage] = useState('');
   const [socket, setSocket] = useState(null);
   const timerRef = useRef(null);
 
   // Fonction pour établir la connexion
   const connectToServer = () => {
+    console.log('Début de la connexion...');
     setConnectionStatus('connecting');
+    setErrorMessage('');
+    
     const newSocket = io(SERVER_URL, {
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
-      timeout: 10000
+      timeout: 10000,
+      transports: ['websocket', 'polling'],
+      path: '/socket.io/',
+      secure: true,
+      rejectUnauthorized: false,
+      forceNew: true,
+      withCredentials: true
     });
 
     newSocket.on('connect', () => {
+      console.log('Connecté au serveur avec succès');
       setConnectionStatus('connected');
-      console.log('Connecté au serveur');
+      setErrorMessage('');
     });
 
     newSocket.on('connect_error', (error) => {
-      setConnectionStatus('error');
       console.error('Erreur de connexion:', error);
+      setConnectionStatus('error');
+      setErrorMessage(`Erreur de connexion: ${error.message}`);
     });
 
-    newSocket.on('disconnect', () => {
+    newSocket.on('disconnect', (reason) => {
+      console.log('Déconnecté du serveur. Raison:', reason);
       setConnectionStatus('disconnected');
-      console.log('Déconnecté du serveur');
+      setErrorMessage(`Déconnecté: ${reason}`);
+    });
+
+    newSocket.on('error', (error) => {
+      console.error('Erreur Socket.IO:', error);
+      setErrorMessage(`Erreur Socket.IO: ${error.message}`);
     });
 
     setSocket(newSocket);
@@ -225,6 +242,7 @@ function App() {
       {connectionStatus === 'error' && (
         <div className="connection-error">
           <p>Impossible de se connecter au serveur</p>
+          <p className="error-details">{errorMessage}</p>
           <button onClick={connectToServer}>Réessayer</button>
         </div>
       )}
