@@ -88,7 +88,8 @@ function App() {
     });
 
     socket.on('matchEnd', (data) => {
-      setGameStatus('finished');
+      // Ne plus changer le statut ici car il est déjà changé par le timer
+      // setGameStatus('finished');
       clearInterval(timerRef.current);
     });
 
@@ -112,6 +113,7 @@ function App() {
         setTimeLeft((prev) => {
           if (prev <= 1) {
             clearInterval(timerRef.current);
+            setGameStatus('finished'); // Afficher immédiatement le résultat
             return 0;
           }
           return prev - 1;
@@ -204,20 +206,23 @@ function App() {
       const isPlayer1 = matchState.player1.pseudo === pseudo;
       const playerScore = isPlayer1 ? scores.player1Score : scores.player2Score;
       const opponentScore = isPlayer1 ? scores.player2Score : scores.player1Score;
-      const result = playerScore > opponentScore ? 'Victoire ! 🎉' : 'Défaite... 😢';
+      const isDraw = playerScore === opponentScore;
+      const result = isDraw ? 'Match nul ! 🤝' : (playerScore > opponentScore ? 'Victoire ! 🎉' : 'Défaite... 😢');
       const difference = Math.abs(playerScore - opponentScore);
       
       return (
         <div className="game-screen">
           <div className="game-result">
-            <h2 className={playerScore > opponentScore ? 'victory' : 'defeat'}>{result}</h2>
+            <h2 className={isDraw ? 'draw' : (playerScore > opponentScore ? 'victory' : 'defeat')}>{result}</h2>
             <div className="final-scores">
               <p>Votre score: {playerScore}</p>
               <p>Score adverse: {opponentScore}</p>
               <p className="score-difference">
-                {playerScore > opponentScore 
-                  ? `Vous avez gagné avec ${difference} clic${difference > 1 ? 's' : ''} d'avance !`
-                  : `Vous avez perdu avec ${difference} clic${difference > 1 ? 's' : ''} de retard...`}
+                {isDraw 
+                  ? "Vous avez fait exactement le même nombre de clics !"
+                  : (playerScore > opponentScore 
+                    ? `Vous avez gagné avec ${difference} clic${difference > 1 ? 's' : ''} d'avance !`
+                    : `Vous avez perdu avec ${difference} clic${difference > 1 ? 's' : ''} de retard...`)}
               </p>
             </div>
             <button 

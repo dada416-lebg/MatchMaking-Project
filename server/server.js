@@ -154,8 +154,8 @@ io.on('connection', async (socket) => {
         
         log(`Match démarré entre ${player1.pseudo} et ${player2.pseudo}`);
         
-        // Démarrer le timer du match
-        setTimeout(() => endMatch(match.id), 60000);
+        // Démarrer le timer du match (30 secondes)
+        setTimeout(() => endMatch(match.id), 30000);
       } else {
         log('En attente d\'un autre joueur...');
       }

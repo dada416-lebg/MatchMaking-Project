@@ -311,6 +311,11 @@
   text-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
 }
 
+.game-result .draw {
+  color: #FFA500;
+  text-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
+}
+
 .score-difference {
   font-size: 1.1em;
   margin-top: 10px;
