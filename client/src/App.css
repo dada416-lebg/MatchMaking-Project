@@ -183,12 +183,14 @@
 }
 
 .final-scores {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
+  margin: 20px 0;
+  font-size: 1.2em;
+  color: #666;
 }
 
 .final-scores p {
-  margin: 0.5rem 0;
+  margin: 10px 0;
+  color: #666;
 }
 
 .game-over button {
@@ -307,11 +309,6 @@
 .game-result .defeat {
   color: #f44336;
   text-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
-}
-
-.final-scores {
-  margin: 20px 0;
-  font-size: 1.2em;
 }
 
 .score-difference {
