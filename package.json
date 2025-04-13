@@ -2,7 +2,7 @@
   "name": "click-battle",
   "version": "1.0.0",
   "description": "Un jeu de bataille de clics en temps réel",
-  "main": "server.js",
+  "main": "main.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -10,7 +10,7 @@
     "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "electron": "electron .",
-    "build:electron": "electron-builder --win portable"
+    "build:electron": "electron-builder --win --x64"
   },
   "build": {
     "appId": "com.clickbattle.app",
@@ -19,7 +19,8 @@
       "output": "dist"
     },
     "win": {
-      "target": "portable"
+      "target": "nsis",
+      "icon": "icon.ico"
     }
   },
   "dependencies": {

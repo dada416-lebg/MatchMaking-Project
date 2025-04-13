@@ -1,8 +1,7 @@
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const cors = require('cors');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const socketIo = require('socket.io');
 const path = require('path');
 require('dotenv').config();
 
@@ -12,9 +11,28 @@ const Match = require('./models/Match');
 const Turn = require('./models/Turn');
 
 const app = express();
-const server = http.createServer(app);
+app.use(cors());
+app.use(express.json());
 
-// Configuration pour forcer la fermeture des connexions existantes
+// Connexion à MongoDB Atlas
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connecté à MongoDB Atlas'))
+  .catch(err => console.error('Erreur de connexion à MongoDB:', err));
+
+// Servir les fichiers statiques du client en production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
+
+const PORT = process.env.PORT || 5001;
+const server = app.listen(PORT, () => {
+  console.log(`Serveur démarré sur le port ${PORT}`);
+});
+
+// Configuration Socket.IO
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -31,25 +49,6 @@ const io = socketIo(server, {
   maxHttpBufferSize: 1e8,
   // Force la fermeture des connexions existantes
   forceNew: true
-});
-
-app.use(cors());
-app.use(express.json());
-
-// Servir les fichiers statiques du client React
-app.use(express.static(path.join(__dirname, 'client', 'build')));
-
-// Connexion à MongoDB Atlas
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://<username>:<password>@cluster0.mongodb.net/click-battle?retryWrites=true&w=majority';
-
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Connecté à MongoDB Atlas'))
-.catch(err => {
-  console.error('Erreur de connexion à MongoDB Atlas:', err);
-  process.exit(1); // Arrêter l'application si la connexion échoue
 });
 
 // File d'attente des joueurs
@@ -281,17 +280,4 @@ async function handlePlayerDisconnect(playerId) {
       endMatch(matchId);
     }
   }
-}
-
-// Route pour toutes les autres requêtes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
-
-const PORT = process.env.PORT || 5001;
-const HOST = '0.0.0.0';
-
-server.listen(PORT, HOST, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
-  console.log('Pour vous connecter depuis un autre appareil, utilisez l\'adresse IP de cet ordinateur');
-}); 
+} 
