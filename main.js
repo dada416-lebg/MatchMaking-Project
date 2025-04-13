@@ -11,13 +11,8 @@ function createWindow() {
     }
   });
 
-  // En production, utiliser l'URL Heroku
-  if (process.env.NODE_ENV === 'production') {
-    mainWindow.loadURL('https://matchmaking-game-822cfdf6085c.herokuapp.com/');
-  } else {
-    // En développement, utiliser le client local
-    mainWindow.loadFile(path.join(__dirname, 'client', 'build', 'index.html'));
-  }
+  // Charger directement l'URL Heroku
+  mainWindow.loadURL('https://matchmaking-game-822cfdf6085c.herokuapp.com/');
 
   // Ouvre les outils de développement (optionnel)
   // mainWindow.webContents.openDevTools();
