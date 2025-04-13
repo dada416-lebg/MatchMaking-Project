@@ -19,11 +19,13 @@ Click Battle est un jeu en ligne où deux joueurs s'affrontent dans une compéti
 ### Méthode Simple (Recommandée) 🎮
 
 1. **Téléchargez l'application**
-   - Rendez-vous sur la section "Releases" du projet
-   - Téléchargez `Click Battle Setup 1.0.0.exe`
+   - Allez dans l'onglet "Releases" de ce dépôt GitHub
+   - Téléchargez le fichier 7ZIP de la dernière version
+   - Extrayez le contenu du 7ZIP
+   - Vous trouverez l'exécutable `Click Battle Setup 1.0.0.exe` dans le dossier extrait
 
 2. **Installez l'application**
-   - Exécutez le fichier d'installation
+   - Exécutez le fichier `Click Battle Setup 1.0.0.exe`
    - Suivez les instructions à l'écran
    - L'application sera installée dans votre menu Démarrer
 
@@ -99,16 +101,3 @@ click-battle/
 - **Application de bureau** : Electron
 - **Hébergement** : Heroku
 
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Pour contribuer :
-
-1. Fork le projet
-2. Créez une branche (`git checkout -b feature/AmazingFeature`)
-3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Poussez vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrez une Pull Request
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails. 
